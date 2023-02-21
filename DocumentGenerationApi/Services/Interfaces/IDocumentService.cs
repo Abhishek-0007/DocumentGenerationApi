@@ -9,6 +9,5 @@ namespace DocumentGenerationApi.Services.Interfaces
 
         DocumentResponseModel GetDocumentById(int id);
 
-        DocumentResponseModel PostDocument(DocumentRequestModel documentRequestModel);
     }
 }

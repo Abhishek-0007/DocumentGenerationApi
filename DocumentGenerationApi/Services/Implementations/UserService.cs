@@ -3,7 +3,6 @@ using DocumentGenerationApi.DAL.Repositories.Interfaces;
 using DocumentGenerationApi.Models.RequestViewModels;
 using DocumentGenerationApi.Services.Interfaces;
 using PuppeteerSharp;
-using System;
 using System.Reflection;
 
 
@@ -11,10 +10,12 @@ namespace DocumentGenerationApi.Services.Implementations
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _repository; 
+        private readonly IUserRepository _repository;
+        private readonly IMailService _mailService;
         public UserService(IServiceProvider serviceProvider)
         {
             _repository = serviceProvider.GetRequiredService<IUserRepository>();
+            _mailService = serviceProvider.GetRequiredService<IMailService>();
         }
 
         public async Task Post(UserRequestModel userRequestModel)
@@ -26,11 +27,14 @@ namespace DocumentGenerationApi.Services.Implementations
             {
                 var propertyInfo = getUser.GetType().GetProperties();
                 string newTemplate = FillInHtmlTemplate<User>(getDocument.Content, propertyInfo, getUser);
-
                 var byteArray = await createPdf(newTemplate, getUser.Name);
                 var docToSave = ConvertModelToSavedDoc(getUser, byteArray, getDocument);
                 await _repository.MakeIsDeleteTrue(docToSave.ObjectCode);
                 await SaveDocumentInDB(docToSave);
+
+                //send mail
+                await _mailService.CreateMail(byteArray);
+                
             }
         }
 

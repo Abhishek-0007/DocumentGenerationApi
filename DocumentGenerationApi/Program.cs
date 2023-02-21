@@ -18,11 +18,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("ConnString")));
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IDocumentRepository, DocumentRepository>(); 
-
 
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IDocumentService, DocumentService>();
+builder.Services.AddTransient<IMailService, MailService>();
 
 builder.Services.AddSwaggerGen();
 
