@@ -15,28 +15,18 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
         public async Task<List<Document>> GetAllDocumentsAsync()
         {
             var list = await _context.Documents.ToListAsync();
-            await _context.SaveChangesAsync();
             return list;
         }
 
         public async Task<Document> GetDocumentById(int id)
         {
-            var doc = _context.Documents.Where(t => t.Id.Equals(id)).FirstOrDefault();
-            await _context.SaveChangesAsync();
+            var doc = await _context.Documents.Where(t => t.Id.Equals(id)).FirstOrDefaultAsync();
             return doc;
 
         }
-
-        public Task<Document> PostDocumentItem(Document document)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Document> GetContent(string docCode)
         {
-            var items = await _context.Documents.ToListAsync();
-
-            var template = items.Where(t => t.DocumentCode.Equals(docCode)).FirstOrDefault();
+            var template = await _context.Documents.Where(t => t.DocumentCode.Equals(docCode)).FirstOrDefaultAsync();
 
             return template;
         }
