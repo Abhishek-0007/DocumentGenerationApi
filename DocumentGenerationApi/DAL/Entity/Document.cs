@@ -13,10 +13,10 @@ namespace DocumentGenerationApi.DAL.Entity
         public string? Content { get; set; }
         public Byte[]? ContentBinary { get; set; }
         public bool isDeleted { get; set; }
-        public string? CreatedUser { get; set; }
+        public string CreatedUser { get; set; }
         public DateTime? CreatedDateTime { get; set;}
         public string? ModifiedUser { get;set;}
-        public DateTime ModifiedDateTime { get; set; }
+        public DateTime? ModifiedDateTime { get; set; }
 
     }
 }

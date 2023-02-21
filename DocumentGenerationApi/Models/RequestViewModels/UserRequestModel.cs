@@ -2,7 +2,7 @@
 {
     public class UserRequestModel
     {
-        public string? PolicyNumber { get; set; }
-        public string? ProductCode { get; set; }
+        public string PolicyNumber { get; set; }
+        public string ProductCode { get; set; }
     }
 }

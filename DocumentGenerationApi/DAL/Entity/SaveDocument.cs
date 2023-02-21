@@ -7,6 +7,8 @@ namespace DocumentGenerationApi.DAL.Entity
     [Table("documentTbl")]
     public class SaveDocument
     {
+        [Key]
+        public int? Id { get; set; }
         public string ObjectCode { get; set; }
         public string? ReferenceType { get; set; }
         public string? ReferenceNumber { get; set; }
@@ -15,7 +17,6 @@ namespace DocumentGenerationApi.DAL.Entity
         public string FileExtension { get; set; }
         public string? LanguageCode { get; set; }
         public string? CreatedUser { get; set; }
-        [Key]
         public DateTime? CreatedDateTime { get; set; }
         public bool isDeleted { get; set; }
 

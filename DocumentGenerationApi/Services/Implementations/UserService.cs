@@ -19,9 +19,8 @@ namespace DocumentGenerationApi.Services.Implementations
 
         public async Task Post(UserRequestModel userRequestModel)
         {
-            var getUser = _repository.GetByPolicyNumber(userRequestModel).Result;
-            Console.WriteLine(getUser.Name);
-            var getDocument = _repository.GetContent("template-123").Result;
+            var getUser = await _repository.GetByPolicyNumber(userRequestModel);
+            var getDocument = await _repository.GetContent("template");
 
             if (getUser != null && getDocument.Content != null)
             {
@@ -32,14 +31,6 @@ namespace DocumentGenerationApi.Services.Implementations
                 var docToSave = ConvertModelToSavedDoc(getUser, byteArray, getDocument);
                 await _repository.MakeIsDeleteTrue(docToSave.ObjectCode);
                 await SaveDocumentInDB(docToSave);
-                if (docToSave != null)
-                {
-                    
-                    //if(_repository.DocExistOrNot(docToSave.ObjectCode).Result)
-                    //{
-                    //    await createPdf(newTemplate, getUser.Name);
-                    //}
-                }
             }
         }
 
@@ -68,9 +59,9 @@ namespace DocumentGenerationApi.Services.Implementations
             });
             await using var page = await browser.NewPageAsync();
             await page.SetContentAsync(template);
-            await page.PdfAsync(Path.Combine(@"C:\Users\007bc\Desktop\pdf_generated", $"{templateName}gh.pdf"));
+            //await page.PdfAsync(Path.Combine(@"C:\Users\007bc\Desktop\pdf_generated", $"{templateName}gh.pdf"));
 
-            return page.PdfDataAsync().Result;
+            return await page.PdfDataAsync();
     }
 
         private string FillInHtmlTemplate<TEntity>(string template, PropertyInfo[] propertyArray, TEntity obj)

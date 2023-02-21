@@ -24,11 +24,10 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
         }
         public async Task<Document> GetContent(string docCode)
         {
-            var items = await _context.Documents.ToListAsync();
+           var template = await _context.Documents.Where(t => t.DocumentCode.Equals(docCode)).FirstOrDefaultAsync();
+            var template1 = await _context.Documents.FirstOrDefaultAsync();
 
-            var template = items.Where(t => t.DocumentCode.Equals(docCode)).FirstOrDefault();
-
-            return template;
+            return template1;
         }
 
         public async Task AddAsync(User user)
@@ -42,8 +41,6 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
             var list = await _context.Users.ToListAsync();
             var item = list.Where(t => t.PolicyNumber.Equals(userRequestModel.PolicyNumber) && 
                                        t.ProductCode.Equals(userRequestModel.ProductCode)).FirstOrDefault();
-            await _context.SaveChangesAsync();
-
             return item;    
         }
 
@@ -55,13 +52,14 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
 
         public async Task MakeIsDeleteTrue(string ObjectCode)
         {
-            var doc = await _context.SavedDocuments.Where(t => t.ObjectCode.Equals(ObjectCode)).FirstOrDefaultAsync();
+            var doc = await _context.SavedDocuments.Where(t => t.ObjectCode.Equals(ObjectCode) && t.isDeleted.Equals(false)).FirstOrDefaultAsync();
 
             if (doc != null)
             {
                 doc.isDeleted = true;
+                await _context.SaveChangesAsync();
+
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DocExistOrNot(string ObjectCode)
