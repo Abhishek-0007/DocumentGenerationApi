@@ -29,23 +29,12 @@ namespace DocumentGenerationApi.Services.Implementations
             return responseList;
         }
 
-        public DocumentResponseModel GetDocumentById(int id)
+        public async DocumentResponseModel GetDocumentById(int id)
         {
-            var doc = _repository.GetAllDocumentsAsync().Result.Where(t => t.Id.Equals(id)).FirstOrDefault();
-            return doc.PropertyValueExtensionMethod<Document, DocumentResponseModel>() as DocumentResponseModel;
-
-        }
-
-        public DocumentResponseModel PostDocument(DocumentRequestModel documentRequestModel)
-        {
-            var request = documentRequestModel.PropertyValueExtensionMethod<DocumentRequestModel, Document>() as Document;
-
-            var response = _repository.PostDocumentItem(request).Result;
-
-            var result = response.PropertyValueExtensionMethod<Document, DocumentResponseModel>() as DocumentResponseModel;
-
-            return result;
-
+            var list = await _repository.GetAllDocumentsAsync();
+            var doc = list.Where(t => t.Id.Equals(id)).FirstOrDefault().
+                PropertyValueExtensionMethod<Document, DocumentResponseModel>() as DocumentResponseModel;
+            return doc;
         }
     }
 }

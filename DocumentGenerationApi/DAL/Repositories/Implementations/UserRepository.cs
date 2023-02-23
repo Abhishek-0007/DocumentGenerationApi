@@ -25,9 +25,8 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
         public async Task<Document> GetContent(string docCode)
         {
            var template = await _context.Documents.Where(t => t.DocumentCode.Equals(docCode)).FirstOrDefaultAsync();
-            var template1 = await _context.Documents.FirstOrDefaultAsync();
 
-            return template1;
+           return template;
         }
 
         public async Task AddAsync(User user)
@@ -38,15 +37,15 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
 
         public async Task<User> GetByPolicyNumber(UserRequestModel userRequestModel)
         {
-            var list = await _context.Users.ToListAsync();
-            var item = list.Where(t => t.PolicyNumber.Equals(userRequestModel.PolicyNumber) && 
-                                       t.ProductCode.Equals(userRequestModel.ProductCode)).FirstOrDefault();
-            return item;    
+            var item = await _context.Users
+                .Where(t => t.PolicyNumber.Equals(userRequestModel.PolicyNumber) && 
+                            t.ProductCode.Equals(userRequestModel.ProductCode)).FirstOrDefaultAsync();
+            return item;
         }
 
         public async Task SaveDocInDBAsync(SaveDocument saveDocument)
         {
-            _context.Add<SaveDocument>(saveDocument);
+            await _context.AddAsync<SaveDocument>(saveDocument);
             await _context.SaveChangesAsync();
         }
 

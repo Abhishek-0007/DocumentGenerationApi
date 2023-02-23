@@ -15,9 +15,9 @@ namespace DocumentGenerationApi.Controllers
         { 
             _service = serviceProperty.GetRequiredService<IUserService>();
         }
+
         [HttpPost]
-       
-        public async Task AddUser(UserRequestModel userRequestModel)
+        public async Task AddUserAsync(UserRequestModel userRequestModel)
         {
            await _service.Post(userRequestModel);
         }
