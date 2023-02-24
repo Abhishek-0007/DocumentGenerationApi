@@ -1,12 +1,13 @@
 ﻿using DocumentGenerationApi.DAL.Entity;
-using DocumentGenerationApi.Models.RequestViewModels;
 using DocumentGenerationApi.Models.ResponseViewModels;
 
 namespace DocumentGenerationApi.Services.Interfaces
 {
-    public interface IUserService
+    public interface ILogService
     {
-        public Task<LogModel> Post(UserRequestModel userRequestModel);
+        public Task<LogModel> WriteLogAsync(string email);
 
+        public LogModel WriteLogException(string message);
     }
+
 }
