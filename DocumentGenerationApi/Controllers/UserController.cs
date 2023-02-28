@@ -2,7 +2,6 @@
 using DocumentGenerationApi.Models.ResponseViewModels;
 using DocumentGenerationApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DocumentGenerationApi.Controllers
 {
@@ -17,9 +16,9 @@ namespace DocumentGenerationApi.Controllers
         }
         [HttpPost]
        
-        public async Task AddUser(UserRequestModel userRequestModel)
+        public async Task<LogModel> AddUser(UserRequestModel userRequestModel)
         {
-           await _service.Post(userRequestModel);
+          return await _service.Post(userRequestModel);
         }
     }
 }

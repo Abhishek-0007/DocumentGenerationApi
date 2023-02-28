@@ -1,6 +1,7 @@
 ﻿using DocumentGenerationApi.DAL.Entity;
 using DocumentGenerationApi.DAL.Repositories.Interfaces;
 using DocumentGenerationApi.Models.RequestViewModels;
+using DocumentGenerationApi.Models.ResponseViewModels;
 using DocumentGenerationApi.Services.Interfaces;
 using PuppeteerSharp;
 using System.Reflection;
@@ -12,13 +13,15 @@ namespace DocumentGenerationApi.Services.Implementations
     {
         private readonly IUserRepository _repository;
         private readonly IMailService _mailService;
+        private readonly ILogService _logService;
         public UserService(IServiceProvider serviceProvider)
         {
             _repository = serviceProvider.GetRequiredService<IUserRepository>();
             _mailService = serviceProvider.GetRequiredService<IMailService>();
+            _logService = serviceProvider.GetRequiredService<ILogService>();
         }
 
-        public async Task Post(UserRequestModel userRequestModel)
+        public async Task<LogModel> Post(UserRequestModel userRequestModel)
         {
             var getUser = await _repository.GetByPolicyNumber(userRequestModel);
             var getDocument = await _repository.GetContent("template");
@@ -33,11 +36,14 @@ namespace DocumentGenerationApi.Services.Implementations
                 await SaveDocumentInDB(docToSave);
 
                 //send mail
-                await _mailService.CreateMail(byteArray);
-                
+                return await _mailService.CreateMail(byteArray);
             }
+            else
+            {
+               return _logService.WriteLogException("Data Not Found!");
+            }
+            
         }
-
         private SaveDocument ConvertModelToSavedDoc(User getUser, Byte[] content, Document getDocument)
         {
             SaveDocument savedDoc = new SaveDocument();

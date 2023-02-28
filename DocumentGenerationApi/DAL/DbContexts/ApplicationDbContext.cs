@@ -19,10 +19,14 @@ namespace DocumentGenerationApi.DAL.DbContexts
 
             modelBuilder.Entity<SaveDocument>()
                 .ToTable("documentTbl");
+
+            modelBuilder.Entity<CreateLogEntry>()
+                .ToTable("LogTbl");
         }
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Document> Documents { get; set; } = null!;
         public DbSet<SaveDocument> SavedDocuments { get; set; } = null!;
+        public DbSet<CreateLogEntry> Logs { get; set; } = null!;
 
     }
 }
