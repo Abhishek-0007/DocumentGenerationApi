@@ -18,7 +18,7 @@ namespace DocumentGenerationApi.Services.Implementations
             var email = new MimeMessage();
             email.Subject = "New Template Attached";
             email.From.Add(MailboxAddress.Parse("aspwebapimail@gmail.com"));
-            email.To.Add(MailboxAddress.Parse("aspwebapimail@gmail.com"));
+            email.To.Add(MailboxAddress.Parse("abhishekdavps@gmail.com"));
 
             var builder = new BodyBuilder();
 
