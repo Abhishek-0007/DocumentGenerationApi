@@ -1,6 +1,6 @@
 ﻿using DocumentGenerationApi.Models.RequestViewModels;
-using DocumentGenerationApi.Models.ResponseViewModels;
 using DocumentGenerationApi.Services.Interfaces;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DocumentGenerationApi.Controllers
@@ -10,15 +10,24 @@ namespace DocumentGenerationApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
+        private readonly IRecurringJobManager _recurringJobManager;
         public UserController(IServiceProvider serviceProperty) 
         { 
             _service = serviceProperty.GetRequiredService<IUserService>();
+            _recurringJobManager = serviceProperty.GetRequiredService<IRecurringJobManager>();
         }
 
         [HttpPost]
-        public async Task<LogModel> AddUser(UserRequestModel userRequestModel)
+        [AutomaticRetry(Attempts = 5)]
+        public async Task<string> AddUser(UserRequestModel userRequestModel)
         {
-          return await _service.Post(userRequestModel);
+             _recurringJobManager.AddOrUpdate(
+                "Job To Be Executed every Monday at 8 AM",
+                () =>  _service.Post(userRequestModel),
+                "0 8 * * 1");
+
+            return _recurringJobManager.ToString();
+
         }
     }
 }

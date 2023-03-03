@@ -1,5 +1,6 @@
 ﻿using DocumentGenerationApi.Models.ResponseViewModels;
 using DocumentGenerationApi.Services.Interfaces;
+using Hangfire;
 using MailKit.Net.Smtp;
 using MimeKit;
 using System.Net.Mime;
@@ -21,12 +22,11 @@ namespace DocumentGenerationApi.Services.Implementations
             email.To.Add(MailboxAddress.Parse("abhishekdavps@gmail.com"));
 
             var builder = new BodyBuilder();
-
+                
             builder.TextBody = "Please find the attached file!";
             var stream = new MemoryStream(pdf);
             await builder.Attachments.AddAsync("Template", stream, MimeKit.ContentType.Parse(MediaTypeNames.Application.Pdf));
             email.Body = builder.ToMessageBody();
-
             return await SendMailAsync(email);
 
         }

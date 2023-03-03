@@ -3,6 +3,7 @@ using DocumentGenerationApi.DAL.Repositories.Implementations;
 using DocumentGenerationApi.DAL.Repositories.Interfaces;
 using DocumentGenerationApi.Services.Implementations;
 using DocumentGenerationApi.Services.Interfaces;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,16 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ILogService, LogService>();
 
+builder.Services.AddHangfireServer();
+builder.Services.AddHangfire(x =>
+{
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("ConnString"));
+    x.UseFilter(new AutomaticRetryAttribute { Attempts = 5 });
+});
+
+
+
+
 builder.Services.AddSwaggerGen();
 
 
@@ -42,5 +53,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard();
 
 app.Run();

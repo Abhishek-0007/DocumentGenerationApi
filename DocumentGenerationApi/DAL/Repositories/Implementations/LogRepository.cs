@@ -26,7 +26,9 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
 
             if (item != null && item.isSent == true)
             {
-                return "Email aleady sent";
+                //return "Email aleady sent";
+                return String.Empty;
+
             }
             else
             {
