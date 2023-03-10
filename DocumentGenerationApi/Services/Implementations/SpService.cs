@@ -41,7 +41,7 @@ namespace DocumentGenerationApi.Services.Implementations
             }
             catch (Exception ex)
             {
-                return new BadRequestObjectResult("Stored Procedure is not running");
+                return new BadRequestResult();
             }
            
 
