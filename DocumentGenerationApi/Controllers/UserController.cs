@@ -1,4 +1,5 @@
-﻿using DocumentGenerationApi.Models.RequestViewModels;
+﻿using DocumentGenerationApi.Models;
+using DocumentGenerationApi.Models.RequestViewModels;
 using DocumentGenerationApi.Models.ResponseViewModels;
 using DocumentGenerationApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,10 @@ namespace DocumentGenerationApi.Controllers
         { 
             _service = serviceProperty.GetRequiredService<ISpService>();
         }
-        [HttpGet]
-        public async Task AddUser()
+        [HttpPost]
+        public async Task<IActionResult> AddUser(SpRequestModel requestModel)
         {
-            await _service.ExecuteStoreProcedure();
+            return await _service.ExecuteStoreProcedure(requestModel);
         }
     }
 }

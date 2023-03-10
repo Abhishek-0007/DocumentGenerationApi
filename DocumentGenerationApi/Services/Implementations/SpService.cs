@@ -1,5 +1,7 @@
 ﻿using DocumentGenerationApi.DAL.Repositories.Interfaces;
+using DocumentGenerationApi.Models;
 using DocumentGenerationApi.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using PuppeteerSharp;
 using System.Data;
@@ -18,20 +20,30 @@ namespace DocumentGenerationApi.Services.Implementations
             _mailService = serviceProvider.GetRequiredService<IMailService>();
         }
 
-        public async Task ExecuteStoreProcedure()
+        public async Task<IActionResult> ExecuteStoreProcedure(SpRequestModel requestModel)
         {
-           await using (var conn = new SqlConnection(_config.GetConnectionString("ConnString")))
+            try
             {
-                await using (var comm = conn.CreateCommand())
+                await using (var conn = new SqlConnection(_config.GetConnectionString("ConnString")))
                 {
-                    conn.Open();
-                    comm.CommandText = "exec sp_generate_refund_policy 'A121','DS1', '111'";
-                    comm.ExecuteNonQuery();
+                    await using (var comm = conn.CreateCommand())
+                    {
+                        conn.Open();
+                        comm.CommandText = $"exec sp_generate_refund_policy '{requestModel.PolicyNumber}','{requestModel.ProductCode}', '{requestModel.TemplateCode}'";
+                        comm.ExecuteNonQuery();
+                    }
                 }
+
+                var str = _repo.GetAll().Result.FirstOrDefault().Body;
+                var item = await createPdf(str);
+                return await _mailService.CreateMail(item);
+
             }
-            var str = _repo.GetAll().Result.FirstOrDefault().Body;
-            var item = await createPdf(str);
-            await _mailService.CreateMail(item);
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult("Stored Procedure is not running");
+            }
+           
 
         }
 
