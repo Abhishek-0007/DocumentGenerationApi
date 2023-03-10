@@ -16,9 +16,17 @@ namespace DocumentGenerationApi.Controllers
             _service = serviceProperty.GetRequiredService<ISpService>();
         }
         [HttpPost]
-        public async Task<IActionResult> AddUser(SpRequestModel requestModel)
+        public async Task<string> AddUser(SpRequestModel requestModel)
         {
-            return await _service.ExecuteStoreProcedure(requestModel);
+            try
+            {
+                await _service.ExecuteStoreProcedure(requestModel);
+                return "Success";
+            }
+            catch(Exception ex) 
+            {
+                return ex.Message;
+            }
         }
     }
 }

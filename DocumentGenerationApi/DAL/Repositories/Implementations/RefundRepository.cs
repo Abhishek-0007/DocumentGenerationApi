@@ -14,7 +14,7 @@ namespace DocumentGenerationApi.DAL.Repositories.Implementations
         }
 
         public async Task<IEnumerable<RefundPolicy>> GetAll()
-        {
+        { 
             return await _context.Refunds.ToListAsync();
         }
     }

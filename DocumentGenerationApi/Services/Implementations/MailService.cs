@@ -14,7 +14,7 @@ namespace DocumentGenerationApi.Services.Implementations
         {
             _logService = serviceProvider.GetRequiredService<ILogService>();
         }
-        public async Task<IActionResult> CreateMail(Byte[] pdf)
+        public async Task CreateMail(Byte[] pdf)
         {
             var email = new MimeMessage();
             email.Subject = "New Template Attached";
@@ -28,28 +28,17 @@ namespace DocumentGenerationApi.Services.Implementations
             await builder.Attachments.AddAsync("Template", stream, MimeKit.ContentType.Parse(MediaTypeNames.Application.Pdf));
             email.Body = builder.ToMessageBody();
 
-            return await SendMailAsync(email);
-
+            await SendMailAsync(email);
 
         }
 
-        private async Task<IActionResult> SendMailAsync(MimeMessage mail)
+        private async Task SendMailAsync(MimeMessage mail)
         {
-            try
-            {
-                using var smtp = new SmtpClient();
-                await smtp.ConnectAsync("smtp.gmail.com", 587, false);
-                await smtp.AuthenticateAsync("aspwebapimail@gmail.com", "payyvzvrwspedhfb");
-                var item = await smtp.SendAsync(mail);
-                await smtp.DisconnectAsync(true);
-
-                return new OkObjectResult("Mail Sent Successfully!");
-            }
-            catch
-            {
-                return new BadRequestObjectResult("Mail not sent");
-            }
-           
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync("smtp.gmail.com", 587, false);
+            await smtp.AuthenticateAsync("aspwebapimail@gmail.com", "payyvzvrwspedhfb");
+            var item = await smtp.SendAsync(mail);
+            await smtp.DisconnectAsync(true);
 
         }
     }

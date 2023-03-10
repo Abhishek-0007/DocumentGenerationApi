@@ -7,11 +7,11 @@ namespace DocumentGenerationApi.DAL.Entity
     public class RefundPolicy
     {
         [Key]
-        public int? Id { get; set; }
-        public string PolicyNumber { get; set; }
+        public int Id { get; set; }
+        public string? PolicyNumber { get; set; }
         public string? TemplateCode { get; set; }
         public string? TransactionNumber { get; set; }
-        public string ChannelCode { get; set; }
+        public string? ChannelCode { get; set; }
         public string? ClientId { get; set; }
         public string? Destination { get; set; } 
         public string? Subject { get; set; } 

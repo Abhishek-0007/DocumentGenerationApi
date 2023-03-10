@@ -6,6 +6,6 @@ namespace DocumentGenerationApi.Services.Interfaces
 {
     public interface IMailService
     {
-        public Task<IActionResult> CreateMail(Byte[] pdf);
+        public Task CreateMail(Byte[] pdf);
     }
 }
