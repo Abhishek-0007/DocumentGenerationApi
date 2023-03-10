@@ -19,10 +19,12 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IRefundRepository, RefundRepository>();
 
-builder.Services.AddTransient<IUserService, UserService>();
+//builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ILogService, LogService>();
+builder.Services.AddTransient<ISpService, SpService>();
 
 builder.Services.AddSwaggerGen();
 

@@ -9,16 +9,15 @@ namespace DocumentGenerationApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _service;
+        private readonly ISpService _service;
         public UserController(IServiceProvider serviceProperty) 
         { 
-            _service = serviceProperty.GetRequiredService<IUserService>();
+            _service = serviceProperty.GetRequiredService<ISpService>();
         }
-        [HttpPost]
-       
-        public async Task<LogModel> AddUser(UserRequestModel userRequestModel)
+        [HttpGet]
+        public async Task AddUser()
         {
-          return await _service.Post(userRequestModel);
+            await _service.ExecuteStoreProcedure();
         }
     }
 }
